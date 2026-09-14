@@ -70,9 +70,10 @@ def get_db_connection():
 
         db = mysql.connector.connect(
             host=os.environ.get("DB_HOST", "localhost"),
-            user=os.environ.get("DB_USER"),
+            port=os.eviron.get("DB_PORT", 3306),
+            user=os.environ.get("DB_USER",),
             password=os.environ.get("DB_PASSWORD"),
-            database=os.environ.get("DB_NAME", "ai_analyse")
+            database=os.environ.get("DB_NAME")
         )
 
         return db
