@@ -67,16 +67,22 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 def get_db_connection():
 
     try:
+        print("ALL DB ENV:", {
+        "DB_HOST": os.environ.get("DB_HOST"),
+        "DB_PORT": os.environ.get("DB_PORT"),
+        "DB_USER": os.environ.get("DB_USER"),
+        "DB_NAME": os.environ.get("DB_NAME"),
+        "DB_PASSWORD_SET": bool(os.environ.get("DB_PASSWORD"))
+        })
 
         db_host = os.environ.get("DB_HOST")
-        print("DB_HOST VALUE:", db_host)
         db_port = os.environ.get("DB_PORT")
         db_user = os.environ.get("DB_USER")
         db_password = os.environ.get("DB_PASSWORD")
         db_name = os.environ.get("DB_NAME")
 
         print("========== DATABASE DEBUG ==========")
-        
+        print("DB_HOST:", db_host)
         print("DB_PORT:", db_port)
         print("DB_USER:", db_user)
         print("DB_PASSWORD SET:", bool(db_password))
@@ -110,7 +116,6 @@ def get_db_connection():
         print("============================================")
 
         return None
-
 
 # =========================================================
 # HELPER FUNCTIONS
