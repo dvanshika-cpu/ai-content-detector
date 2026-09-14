@@ -68,19 +68,45 @@ def get_db_connection():
 
     try:
 
+        db_host = os.environ.get("DB_HOST")
+        db_port = os.environ.get("DB_PORT")
+        db_user = os.environ.get("DB_USER")
+        db_password = os.environ.get("DB_PASSWORD")
+        db_name = os.environ.get("DB_NAME")
+
+        print("========== DATABASE DEBUG ==========")
+        print("DB_HOST:", db_host)
+        print("DB_PORT:", db_port)
+        print("DB_USER:", db_user)
+        print("DB_PASSWORD SET:", bool(db_password))
+        print("DB_NAME:", db_name)
+        print("====================================")
+
         db = mysql.connector.connect(
-            host=os.environ.get("DB_HOST", "localhost"),
-            port=os.environ.get("DB_PORT", 3306),
-            user=os.environ.get("DB_USER",),
-            password=os.environ.get("DB_PASSWORD"),
-            database=os.environ.get("DB_NAME","ai_analyse")
+            host=db_host,
+            port=int(db_port) if db_port else 3306,
+            user=db_user,
+            password=db_password,
+            database=db_name
         )
+
+        print("MySQL Database Connected Successfully!")
 
         return db
 
     except mysql.connector.Error as err:
 
-        print("MySQL Connection Error:", err)
+        print("========== MYSQL CONNECTION ERROR ==========")
+        print("ERROR:", err)
+        print("============================================")
+
+        return None
+
+    except Exception as e:
+
+        print("========== GENERAL DATABASE ERROR ==========")
+        print("ERROR:", e)
+        print("============================================")
 
         return None
 
