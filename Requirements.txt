@@ -1,0 +1,7 @@
+Flask
+mysql-connector-python
+requests
+PyMuPDF
+pytesseract
+Pillow
+Werkzeug

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>History | AI Content Detector</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0b0f19;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            height: 70px;
+            padding: 0 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #252b3a;
+            background: #0e1320;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #c7ccda;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .logout {
+            padding: 9px 17px;
+            border: 1px solid #394154;
+            border-radius: 8px;
+        }
+
+        .logout:hover {
+            background: #171d2b;
+        }
+
+        /* MAIN */
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: 45px auto;
+        }
+
+        .heading {
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: #8e96a8;
+            font-size: 15px;
+        }
+
+        /* EMPTY HISTORY */
+        .empty {
+            background: #111725;
+            border: 1px solid #252d3d;
+            border-radius: 15px;
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: #8992a5;
+            margin-bottom: 25px;
+        }
+
+        .home-btn {
+            display: inline-block;
+            padding: 11px 22px;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #0b0f19;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* TABLE */
+        .history-box {
+            background: #111725;
+            border: 1px solid #252d3d;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: #8992a5;
+            font-size: 13px;
+            font-weight: normal;
+            padding: 18px 20px;
+            border-bottom: 1px solid #252d3d;
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid #202738;
+            font-size: 14px;
+            color: #dfe3eb;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #151b29;
+        }
+
+        .type {
+            font-weight: bold;
+        }
+
+        .filename {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .verdict {
+            font-weight: bold;
+        }
+
+        /* VIEW RESULT */
+        .view-result {
+            color: #ff4d4d;
+            text-decoration: underline;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .view-result:hover {
+            color: #4da6ff;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .history-box {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 750px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="logo">
+            AI Content Detector
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('index') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                History
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN -->
+    <div class="container">
+
+        <div class="heading">
+            <h1>Analysis History</h1>
+
+            <p>
+                View your previous AI content analysis results.
+            </p>
+        </div>
+
+
+        {% if history %}
+
+        <div class="history-box">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Content / File</th>
+                        <th>AI Probability</th>
+                        <th>Human Probability</th>
+                        <th>Verdict</th>
+                        <th>Date</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in history %}
+
+                    <tr>
+
+                        <!-- TYPE -->
+                        <td>
+                            <span class="type">
+
+                                {% if item.file_type %}
+                                    {{ item.file_type }}
+                                {% else %}
+                                    Text
+                                {% endif %}
+
+                            </span>
+                        </td>
+
+
+                        <!-- FILE / TEXT -->
+                        <td>
+
+                            <div class="filename">
+
+                                {% if item.file_name %}
+
+                                    {{ item.file_name }}
+
+                                {% elif item.analysis_text %}
+
+                                    {{ item.analysis_text[:80] }}
+
+                                {% else %}
+
+                                    Text Analysis
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- AI -->
+                        <td>
+                            {{ item.ai_probability }}%
+                        </td>
+
+
+                        <!-- HUMAN -->
+                        <td>
+                            {{ item.human_probability }}%
+                        </td>
+
+
+                        <!-- VERDICT -->
+                        <td>
+
+                            <span class="verdict">
+                                {{ item.verdict }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- DATE -->
+                        <td>
+                            {{ item.analyzed_at }}
+                        </td>
+
+
+                        <!-- RESULT -->
+                        <td>
+
+                            <a
+                                href="{{ url_for('view_result', analysis_id=item.analysis_id) }}"
+                                class="view-result"
+                            >
+                                View Result
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <!-- NO HISTORY -->
+        <div class="empty">
+
+            <h2>No Analysis Yet</h2>
+
+            <p>
+                Your previous text, PDF and image analyses will appear here.
+            </p>
+
+            <a
+                href="{{ url_for('index') }}"
+                class="home-btn"
+            >
+                Start Analysis
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

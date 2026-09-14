@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analysis Result - AI Analyse</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0d0d0d;
+            color: white;
+        }
+
+        .navbar {
+            height: 70px;
+            padding: 0 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #111;
+            border-bottom: 1px solid #292929;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            padding: 55px 25px;
+        }
+
+        .back {
+            display: inline-block;
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            color: white;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .heading h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            color: #888;
+            font-size: 15px;
+        }
+
+        .source {
+            text-align: center;
+            margin-top: 12px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* MAIN RESULT */
+
+        .result-card {
+            background: #191919;
+            border: 1px solid #303030;
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        /* PROBABILITY */
+
+        .probabilities {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .probability-card {
+            background: #111;
+            border: 1px solid #2c2c2c;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .probability-card h3 {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .percentage {
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .bar {
+            width: 100%;
+            height: 8px;
+            background: #292929;
+            border-radius: 20px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: #4da6ff;
+        }
+
+        /* VERDICT */
+
+        .verdict-box {
+            text-align: center;
+            background: #111;
+            border: 1px solid #303030;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .verdict-label {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .verdict {
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        /* DETAILS */
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .detail-card {
+            background: #111;
+            border: 1px solid #2c2c2c;
+            border-radius: 13px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .detail-card span {
+            display: block;
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .detail-card strong {
+            font-size: 18px;
+        }
+
+        /* REASON */
+
+        .reason-box {
+            background: #111;
+            border: 1px solid #303030;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .reason-box h2 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .reason-box p {
+            color: #aaa;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        /* TEXT */
+
+        .text-box {
+            background: #111;
+            border: 1px solid #303030;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .text-box h2 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .analysed-text {
+            color: #aaa;
+            line-height: 1.7;
+            font-size: 14px;
+
+            max-height: 250px;
+            overflow-y: auto;
+
+            white-space: pre-wrap;
+        }
+
+        /* BUTTONS */
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 13px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .primary {
+            background: white;
+            color: #111;
+        }
+
+        .primary:hover {
+            background: #4da6ff;
+            color: white;
+        }
+
+        .secondary {
+            border: 1px solid #444;
+            color: #aaa;
+        }
+
+        .secondary:hover {
+            border-color: #4da6ff;
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .container {
+                padding: 35px 15px;
+            }
+
+            .heading h1 {
+                font-size: 30px;
+            }
+
+            .result-card {
+                padding: 20px;
+            }
+
+            .probabilities {
+                grid-template-columns: 1fr;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            AI ANALYSE
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('index') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                History
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="container">
+
+
+        <a
+            href="{{ url_for('index') }}"
+            class="back"
+        >
+            ← Back to Home
+        </a>
+
+
+        <div class="heading">
+
+            <h1>
+                Analysis Result
+            </h1>
+
+            <p>
+                Your content has been analysed successfully.
+            </p>
+
+            {% if filename %}
+
+                <div class="source">
+                    File: {{ filename }}
+                </div>
+
+            {% else %}
+
+                <div class="source">
+                    Source: {{ source_type }}
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="result-card">
+
+
+            <!-- PROBABILITIES -->
+
+            <div class="probabilities">
+
+
+                <div class="probability-card">
+
+                    <h3>
+                        AI Probability
+                    </h3>
+
+                    <div class="percentage">
+                        {{ analysis.ai_probability }}%
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            class="bar-fill"
+                            style="width: {{ analysis.ai_probability }}%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="probability-card">
+
+                    <h3>
+                        Human Probability
+                    </h3>
+
+                    <div class="percentage">
+                        {{ analysis.human_probability }}%
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            class="bar-fill"
+                            style="width: {{ analysis.human_probability }}%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- VERDICT -->
+
+            <div class="verdict-box">
+
+                <div class="verdict-label">
+                    FINAL VERDICT
+                </div>
+
+                <div class="verdict">
+                    {{ analysis.verdict }}
+                </div>
+
+            </div>
+
+
+            <!-- DETAILS -->
+
+            <div class="details">
+
+
+                <div class="detail-card">
+
+                    <span>
+                        Confidence
+                    </span>
+
+                    <strong>
+                        {{ analysis.confidence }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-card">
+
+                    <span>
+                        Humanization Score
+                    </span>
+
+                    <strong>
+                        {{ analysis.humanization_score }}%
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-card">
+
+                    <span>
+                        Humanization Level
+                    </span>
+
+                    <strong>
+                        {{ analysis.humanization_level }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- REASON -->
+
+            <div class="reason-box">
+
+                <h2>
+                    Why this result?
+                </h2>
+
+                <p>
+                    {{ analysis.reason }}
+                </p>
+
+            </div>
+
+
+            <!-- ANALYSED TEXT -->
+
+            {% if analysis_text %}
+
+                <div class="text-box">
+
+                    <h2>
+                        Analysed Content
+                    </h2>
+
+                    <div class="analysed-text">
+                        {{ analysis_text }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ACTION BUTTONS -->
+
+            <div class="actions">
+
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="btn primary"
+                >
+                    ← Home
+                </a>
+
+
+                {% if source_type == "Text" %}
+
+                    <a
+                        href="{{ url_for('text_analysis') }}"
+                        class="btn secondary"
+                    >
+                        Analyse Another
+                    </a>
+
+                {% elif source_type == "PDF" %}
+
+                    <a
+                        href="{{ url_for('pdf_analysis') }}"
+                        class="btn secondary"
+                    >
+                        Analyse Another
+                    </a>
+
+                {% elif source_type == "Image" %}
+
+                    <a
+                        href="{{ url_for('image_analysis') }}"
+                        class="btn secondary"
+                    >
+                        Analyse Another
+                    </a>
+
+                {% endif %}
+
+
+                {% if analysis_id %}
+
+                    <a
+                        href="{{ url_for('history') }}"
+                        class="btn secondary"
+                    >
+                        View History
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+</body>
+
+</html>

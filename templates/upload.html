@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ file_type }} Analysis | AI Content Detector</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+            background: #0b0f19;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 70px;
+
+            padding: 0 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #0e1320;
+
+            border-bottom: 1px solid #252b3a;
+        }
+
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+
+            gap: 25px;
+        }
+
+
+        .nav-links a {
+            color: #c7ccda;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+
+        .logout {
+            padding: 9px 17px;
+
+            border: 1px solid #394154;
+
+            border-radius: 8px;
+        }
+
+
+        .logout:hover {
+            background: #171d2b;
+        }
+
+
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 90%;
+
+            max-width: 900px;
+
+            margin: 45px auto;
+        }
+
+
+        .back {
+            display: inline-block;
+
+            color: #9ba4b7;
+
+            text-decoration: none;
+
+            margin-bottom: 25px;
+
+            font-size: 14px;
+        }
+
+
+        .back:hover {
+            color: #ffffff;
+        }
+
+
+        .heading {
+            margin-bottom: 30px;
+        }
+
+
+        .heading h1 {
+            font-size: 34px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .heading p {
+            color: #8e96a8;
+
+            font-size: 15px;
+        }
+
+
+
+        /* ================= UPLOAD CARD ================= */
+
+        .upload-card {
+            background: #111725;
+
+            border: 1px solid #252d3d;
+
+            border-radius: 16px;
+
+            padding: 30px;
+        }
+
+
+
+        /* ================= DROP ZONE ================= */
+
+        .drop-zone {
+            min-height: 280px;
+
+            border: 2px dashed #3b4559;
+
+            border-radius: 14px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 30px;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+        }
+
+
+        .drop-zone:hover {
+            border-color: #69758a;
+
+            background: #151b29;
+        }
+
+
+        .drop-zone.dragover {
+            border-color: #ffffff;
+
+            background: #171e2d;
+        }
+
+
+        .upload-icon {
+            font-size: 48px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .drop-zone h3 {
+            font-size: 19px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .drop-zone p {
+            color: #8e96a8;
+
+            font-size: 14px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .browse-btn {
+            display: inline-block;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #0b0f19;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+
+        /* ================= FILE INPUT ================= */
+
+        #fileInput {
+            display: none;
+        }
+
+
+
+        /* ================= FILE INFO ================= */
+
+        .file-info {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 16px;
+
+            background: #0b0f19;
+
+            border: 1px solid #30384a;
+
+            border-radius: 10px;
+        }
+
+
+        .file-info.active {
+            display: block;
+        }
+
+
+        .file-name {
+            font-weight: bold;
+
+            word-break: break-word;
+        }
+
+
+        .file-size {
+            color: #8e96a8;
+
+            font-size: 13px;
+
+            margin-top: 6px;
+        }
+
+
+
+        /* ================= IMAGE PREVIEW ================= */
+
+        .preview-container {
+            display: none;
+
+            margin-top: 20px;
+
+            text-align: center;
+        }
+
+
+        .preview-container.active {
+            display: block;
+        }
+
+
+        .preview-container img {
+            max-width: 100%;
+
+            max-height: 300px;
+
+            border-radius: 10px;
+
+            border: 1px solid #30384a;
+        }
+
+
+
+        /* ================= ERROR ================= */
+
+        .error-message {
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 12px 15px;
+
+            background: #2a1820;
+
+            border: 1px solid #69313d;
+
+            border-radius: 8px;
+
+            color: #ff9ca8;
+
+            font-size: 14px;
+        }
+
+
+        .error-message.active {
+            display: block;
+        }
+
+
+
+        /* ================= ANALYSE BUTTON ================= */
+
+        .button-area {
+            margin-top: 25px;
+        }
+
+
+        .analyse-button {
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #ffffff;
+
+            color: #0b0f19;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .analyse-button:hover {
+            background: #dfe3eb;
+        }
+
+
+        .analyse-button:disabled {
+            opacity: 0.5;
+
+            cursor: not-allowed;
+        }
+
+
+
+        /* ================= LOADING ================= */
+
+        .loading-box {
+            display: none;
+
+            margin-top: 25px;
+
+            padding: 28px;
+
+            text-align: center;
+
+            background: #0e1320;
+
+            border: 1px solid #30384a;
+
+            border-radius: 14px;
+        }
+
+
+        .spinner {
+            width: 42px;
+
+            height: 42px;
+
+            margin: 0 auto 18px;
+
+            border: 4px solid #293142;
+
+            border-top: 4px solid #ffffff;
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        .loading-box h3 {
+            font-size: 19px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .loading-box p {
+            color: #8e96a8;
+
+            font-size: 14px;
+        }
+
+
+        .loading-steps {
+            margin-top: 18px;
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+
+            color: #aeb6c7;
+
+            font-size: 13px;
+        }
+
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+
+            .nav-links {
+                gap: 12px;
+            }
+
+
+            .container {
+                width: 94%;
+
+                margin-top: 30px;
+            }
+
+
+            .heading h1 {
+                font-size: 28px;
+            }
+
+
+            .upload-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+
+        <div class="logo">
+            AI Content Detector
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('index') }}">
+                Home
+            </a>
+
+
+            <a href="{{ url_for('history') }}">
+                History
+            </a>
+
+
+            <a href="{{ url_for('logout') }}" class="logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="container">
+
+
+        <a href="{{ url_for('index') }}" class="back">
+            ← Back to Home
+        </a>
+
+
+
+        <div class="heading">
+
+            <h1>
+                {{ file_type }} Analysis
+            </h1>
+
+
+            <p>
+
+                {% if file_type == "PDF" %}
+
+                    Upload a PDF document to analyse its content.
+
+                {% else %}
+
+                    Upload an image to analyse the text inside it.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ================= CARD ================= -->
+
+        <div class="upload-card">
+
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                action="{{ url_for(upload_route) }}"
+                id="uploadForm"
+            >
+
+
+                <!-- ================= DROP ZONE ================= -->
+
+                <label
+                    for="fileInput"
+                    class="drop-zone"
+                    id="dropZone"
+                >
+
+
+                    <div class="upload-icon">
+
+                        {% if file_type == "PDF" %}
+                            📄
+                        {% else %}
+                            🖼️
+                        {% endif %}
+
+                    </div>
+
+
+                    <h3>
+
+                        {% if file_type == "PDF" %}
+                            Drop your PDF here
+                        {% else %}
+                            Drop your image here
+                        {% endif %}
+
+                    </h3>
+
+
+                    <p>
+                        or click below to browse your files
+                    </p>
+
+
+                    <span class="browse-btn">
+                        Browse File
+                    </span>
+
+
+                </label>
+
+
+
+                <!-- ================= FILE INPUT ================= -->
+
+                <input
+                    type="file"
+                    name="file"
+                    id="fileInput"
+
+                    {% if file_type == "PDF" %}
+
+                        accept=".pdf,application/pdf"
+
+                    {% else %}
+
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+
+                    {% endif %}
+
+                    required
+                >
+
+
+
+                <!-- ================= FILE INFO ================= -->
+
+                <div
+                    class="file-info"
+                    id="fileInfo"
+                >
+
+                    <div class="file-name" id="fileName">
+                    </div>
+
+                    <div class="file-size" id="fileSize">
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= IMAGE PREVIEW ================= -->
+
+                {% if file_type == "Image" %}
+
+                <div
+                    class="preview-container"
+                    id="previewContainer"
+                >
+
+                    <img
+                        id="imagePreview"
+                        src=""
+                        alt="Image Preview"
+                    >
+
+                </div>
+
+                {% endif %}
+
+
+
+                <!-- ================= ERROR ================= -->
+
+                <div
+                    class="error-message"
+                    id="errorMessage"
+                >
+                </div>
+
+
+
+                <!-- ================= BUTTON ================= -->
+
+                <div class="button-area">
+
+                    <button
+                        type="submit"
+                        class="analyse-button"
+                        id="analyseButton"
+                        disabled
+                    >
+
+                        Analyse {{ file_type }}
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- ================= LOADING ================= -->
+
+                <div
+                    class="loading-box"
+                    id="loadingBox"
+                >
+
+                    <div class="spinner"></div>
+
+
+                    <h3>
+                        Analysing your {{ file_type|lower }}...
+                    </h3>
+
+
+                    <p>
+
+                        {% if file_type == "PDF" %}
+
+                            Extracting text and analysing your document.
+
+                        {% else %}
+
+                            Reading the image and analysing its content.
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <div class="loading-steps">
+
+                        <span>
+                            ✓ File received
+                        </span>
+
+                        <span>
+                            ✓ Extracting content
+                        </span>
+
+                        <span>
+                            ⏳ Generating result
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const form = document.getElementById("uploadForm");
+
+        const fileInput = document.getElementById("fileInput");
+
+        const dropZone = document.getElementById("dropZone");
+
+        const fileInfo = document.getElementById("fileInfo");
+
+        const fileName = document.getElementById("fileName");
+
+        const fileSize = document.getElementById("fileSize");
+
+        const analyseButton = document.getElementById("analyseButton");
+
+        const loadingBox = document.getElementById("loadingBox");
+
+        const errorMessage = document.getElementById("errorMessage");
+
+
+        const fileType = "{{ file_type }}";
+
+
+        /*
+         * IMAGE PREVIEW
+         */
+
+        const previewContainer =
+            document.getElementById("previewContainer");
+
+        const imagePreview =
+            document.getElementById("imagePreview");
+
+
+
+        /*
+         * FILE SELECTION
+         */
+
+        fileInput.addEventListener("change", function() {
+
+            if (fileInput.files.length > 0) {
+
+                handleFile(fileInput.files[0]);
+
+            }
+
+        });
+
+
+
+        /*
+         * HANDLE FILE
+         */
+
+        function handleFile(file) {
+
+            errorMessage.classList.remove("active");
+
+            errorMessage.innerText = "";
+
+
+            /*
+             * Allowed extensions
+             */
+
+            let allowedExtensions;
+
+
+            if (fileType === "PDF") {
+
+                allowedExtensions = ["pdf"];
+
+            } else {
+
+                allowedExtensions = [
+                    "jpg",
+                    "jpeg",
+                    "png",
+                    "webp"
+                ];
+
+            }
+
+
+            /*
+             * Get extension
+             */
+
+            const fileNameLower =
+                file.name.toLowerCase();
+
+            const extension =
+                fileNameLower.split(".").pop();
+
+
+
+            /*
+             * Validate extension
+             */
+
+            if (!allowedExtensions.includes(extension)) {
+
+                showError(
+                    "Invalid file type. Please upload a valid " +
+                    fileType +
+                    " file."
+                );
+
+                fileInput.value = "";
+
+                analyseButton.disabled = true;
+
+                return;
+
+            }
+
+
+
+            /*
+             * File size validation
+             *
+             * Maximum 10 MB
+             */
+
+            const maxSize =
+                10 * 1024 * 1024;
+
+
+            if (file.size > maxSize) {
+
+                showError(
+                    "File is too large. Maximum allowed size is 10 MB."
+                );
+
+                fileInput.value = "";
+
+                analyseButton.disabled = true;
+
+                return;
+
+            }
+
+
+
+            /*
+             * Show file information
+             */
+
+            fileName.innerText =
+                "Selected file: " + file.name;
+
+
+            fileSize.innerText =
+                "Size: " + formatFileSize(file.size);
+
+
+            fileInfo.classList.add("active");
+
+
+            /*
+             * Enable button
+             */
+
+            analyseButton.disabled = false;
+
+
+
+            /*
+             * IMAGE PREVIEW
+             */
+
+            if (
+                fileType === "Image" &&
+                previewContainer &&
+                imagePreview
+            ) {
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload = function(event) {
+
+                    imagePreview.src =
+                        event.target.result;
+
+                    previewContainer.classList.add("active");
+
+                };
+
+
+                reader.readAsDataURL(file);
+
+            }
+
+        }
+
+
+
+        /*
+         * SHOW ERROR
+         */
+
+        function showError(message) {
+
+            errorMessage.innerText = message;
+
+            errorMessage.classList.add("active");
+
+        }
+
+
+
+        /*
+         * FILE SIZE
+         */
+
+        function formatFileSize(bytes) {
+
+            if (bytes < 1024) {
+
+                return bytes + " Bytes";
+
+            }
+
+
+            if (bytes < 1024 * 1024) {
+
+                return (
+                    (bytes / 1024).toFixed(1)
+                    + " KB"
+                );
+
+            }
+
+
+            return (
+                (bytes / (1024 * 1024)).toFixed(2)
+                + " MB"
+            );
+
+        }
+
+
+
+        /*
+         * DRAG OVER
+         */
+
+        dropZone.addEventListener(
+            "dragover",
+            function(event) {
+
+                event.preventDefault();
+
+                dropZone.classList.add("dragover");
+
+            }
+        );
+
+
+
+        /*
+         * DRAG LEAVE
+         */
+
+        dropZone.addEventListener(
+            "dragleave",
+            function() {
+
+                dropZone.classList.remove("dragover");
+
+            }
+        );
+
+
+
+        /*
+         * DROP
+         */
+
+        dropZone.addEventListener(
+            "drop",
+            function(event) {
+
+                event.preventDefault();
+
+                dropZone.classList.remove("dragover");
+
+
+                const files =
+                    event.dataTransfer.files;
+
+
+                if (files.length > 0) {
+
+                    /*
+                     * Put dropped file into input
+                     */
+
+                    fileInput.files =
+                        files;
+
+
+                    handleFile(files[0]);
+
+                }
+
+            }
+        );
+
+
+
+        /*
+         * FORM SUBMIT
+         */
+
+        form.addEventListener(
+            "submit",
+            function(event) {
+
+
+                /*
+                 * Check file
+                 */
+
+                if (fileInput.files.length === 0) {
+
+                    event.preventDefault();
+
+                    showError(
+                        "Please select a file first."
+                    );
+
+                    return;
+
+                }
+
+
+
+                /*
+                 * Show loading
+                 */
+
+                loadingBox.style.display =
+                    "block";
+
+
+
+                /*
+                 * Disable button
+                 */
+
+                analyseButton.disabled =
+                    true;
+
+
+                analyseButton.innerText =
+                    "Analysing...";
+
+
+
+                /*
+                 * Prevent accidental
+                 * multiple submissions
+                 */
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

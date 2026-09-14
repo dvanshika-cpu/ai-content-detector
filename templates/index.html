@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Analyse - Home</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0d0d0d;
+            color: white;
+        }
+
+        .navbar {
+            height: 70px;
+            padding: 0 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid #292929;
+            background: #111;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-right a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-right a:hover {
+            color: white;
+        }
+
+        .logout {
+            padding: 9px 16px;
+            border: 1px solid #444;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 70px 30px;
+        }
+
+        .welcome {
+            margin-bottom: 50px;
+        }
+
+        .welcome h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            color: #888;
+            font-size: 16px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: #191919;
+            border: 1px solid #303030;
+            border-radius: 18px;
+
+            padding: 35px;
+
+            text-decoration: none;
+            color: white;
+
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #4da6ff;
+            background: #1d1d1d;
+        }
+
+        .icon {
+            font-size: 38px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #888;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            AI ANALYSE
+        </div>
+
+        <div class="nav-right">
+
+            <a href="{{ url_for('index') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                History
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="container">
+
+        <div class="welcome">
+
+            <h1>
+                Welcome, {{ session.get('username') }}
+            </h1>
+
+            <p>
+                Choose what you want to analyse.
+            </p>
+
+        </div>
+
+
+        <div class="options">
+
+            <!-- TEXT -->
+
+            <a href="{{ url_for('text_analysis') }}" class="card">
+
+                <div class="icon">
+                    📝
+                </div>
+
+                <h2>
+                    Text Analysis
+                </h2>
+
+                <p>
+                    Paste your text and analyse whether it appears
+                    AI-generated, human-written or humanized.
+                </p>
+
+            </a>
+
+
+            <!-- PDF -->
+
+            <a href="{{ url_for('pdf_analysis') }}" class="card">
+
+                <div class="icon">
+                    📄
+                </div>
+
+                <h2>
+                    PDF Analysis
+                </h2>
+
+                <p>
+                    Upload a PDF and extract its content for
+                    AI-generated text analysis.
+                </p>
+
+            </a>
+
+
+            <!-- IMAGE -->
+
+            <a href="{{ url_for('image_analysis') }}" class="card">
+
+                <div class="icon">
+                    🖼️
+                </div>
+
+                <h2>
+                    Image Analysis
+                </h2>
+
+                <p>
+                    Upload an image and analyse the text detected
+                    using OCR.
+                </p>
+
+            </a>
+
+
+            <!-- HISTORY -->
+
+            <a href="{{ url_for('history') }}" class="card">
+
+                <div class="icon">
+                    📜
+                </div>
+
+                <h2>
+                    Analysis History
+                </h2>
+
+                <p>
+                    View your previous analysis results and open
+                    old results again.
+                </p>
+
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
