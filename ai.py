@@ -73,7 +73,7 @@ def get_db_connection():
             port=os.environ.get("DB_PORT", 3306),
             user=os.environ.get("DB_USER",),
             password=os.environ.get("DB_PASSWORD"),
-            database=os.environ.get("DB_NAME")
+            database=os.environ.get("DB_NAME","ai_analyse")
         )
 
         return db
