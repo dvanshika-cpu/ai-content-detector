@@ -65,46 +65,24 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 # =========================================================
 
 def get_db_connection():
+
     try:
-        mysql_url = os.environ.get("MYSQL_PUBLIC_URL")
-
-        if not mysql_url:
-            print("MYSQL_PUBLIC_URL is missing!")
-            return None
 
         db = mysql.connector.connect(
-            option_files=None,
-            connection_timeout=30
+            host="DB_HOST",
+            user="DB_USER",
+            password="DB_PASSWORD",
+            database="DB_NAME"
         )
-
-        # Parse Railway MYSQL_URL
-        from urllib.parse import urlparse
-
-        parsed = urlparse(mysql_url)
-
-        db = mysql.connector.connect(
-            host=parsed.hostname,
-            port=parsed.port or 3306,
-            user=parsed.username,
-            password=parsed.password,
-            database=parsed.path.lstrip("/")
-        )
-
-        print("MySQL Database Connected Successfully!")
 
         return db
 
     except mysql.connector.Error as err:
-        print("========== MYSQL CONNECTION ERROR ==========")
-        print("ERROR:", err)
-        print("============================================")
+
+        print("MySQL Connection Error:", err)
+
         return None
 
-    except Exception as e:
-        print("========== GENERAL DATABASE ERROR ==========")
-        print("ERROR:", e)
-        print("============================================")
-        return None
 
 # =========================================================
 # HELPER FUNCTIONS
