@@ -66,10 +66,10 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 
 def get_db_connection():
     try:
-        mysql_url = os.environ.get("MYSQL_URL")
+        mysql_url = os.environ.get("MYSQL_PUBLIC_URL")
 
         if not mysql_url:
-            print("MYSQL_URL is missing!")
+            print("MYSQL_PUBLIC_URL is missing!")
             return None
 
         db = mysql.connector.connect(
