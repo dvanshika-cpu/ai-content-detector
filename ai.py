@@ -65,36 +65,29 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 # =========================================================
 
 def get_db_connection():
-
     try:
-        print("ALL DB ENV:", {
-        "DB_HOST": os.environ.get("DB_HOST"),
-        "DB_PORT": os.environ.get("DB_PORT"),
-        "DB_USER": os.environ.get("DB_USER"),
-        "DB_NAME": os.environ.get("DB_NAME"),
-        "DB_PASSWORD_SET": bool(os.environ.get("DB_PASSWORD"))
-        })
+        mysql_url = os.environ.get("MYSQL_URL")
 
-        db_host = os.environ.get("DB_HOST")
-        db_port = os.environ.get("DB_PORT")
-        db_user = os.environ.get("DB_USER")
-        db_password = os.environ.get("DB_PASSWORD")
-        db_name = os.environ.get("DB_NAME")
-
-        print("========== DATABASE DEBUG ==========")
-        print("DB_HOST:", db_host)
-        print("DB_PORT:", db_port)
-        print("DB_USER:", db_user)
-        print("DB_PASSWORD SET:", bool(db_password))
-        print("DB_NAME:", db_name)
-        print("====================================")
+        if not mysql_url:
+            print("MYSQL_URL is missing!")
+            return None
 
         db = mysql.connector.connect(
-            host=db_host,
-            port=int(db_port) if db_port else 3306,
-            user=db_user,
-            password=db_password,
-            database=db_name
+            option_files=None,
+            connection_timeout=30
+        )
+
+        # Parse Railway MYSQL_URL
+        from urllib.parse import urlparse
+
+        parsed = urlparse(mysql_url)
+
+        db = mysql.connector.connect(
+            host=parsed.hostname,
+            port=parsed.port or 3306,
+            user=parsed.username,
+            password=parsed.password,
+            database=parsed.path.lstrip("/")
         )
 
         print("MySQL Database Connected Successfully!")
@@ -102,19 +95,15 @@ def get_db_connection():
         return db
 
     except mysql.connector.Error as err:
-
         print("========== MYSQL CONNECTION ERROR ==========")
         print("ERROR:", err)
         print("============================================")
-
         return None
 
     except Exception as e:
-
         print("========== GENERAL DATABASE ERROR ==========")
         print("ERROR:", e)
         print("============================================")
-
         return None
 
 # =========================================================
